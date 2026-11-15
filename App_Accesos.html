@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>App Accesos · Qori Urqu</title>
+<style>
+:root{--navy:#3b2a14;--acc:#a8561a;--verde:#1b7a3d;--verdebg:#e3f4e8;--rojo:#b3261e;--rojobg:#fde8e6;--ambar:#9a5b00;--ambarbg:#fff1d6;--gris:#5b6472;--bg:#f6f3ef;--card:#fff;--line:#ddd5cb}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:#1f1b16;font-size:16px;line-height:1.4}
+header{background:var(--navy);color:#fff;padding:12px 16px}
+header h1{font-size:1.1em;margin:0}
+header small{display:block;opacity:.8;font-weight:400}
+header .yo{margin-top:8px;display:flex;gap:8px;align-items:center;font-size:.9em}
+select,input,textarea{font:inherit;width:100%;padding:11px 12px;border:2px solid var(--line);border-radius:10px;background:#fff}
+select{width:auto;max-width:100%}
+label{display:block;font-weight:700;margin:14px 0 5px}
+nav{display:flex;gap:6px;padding:12px 12px 0;max-width:1000px;margin:0 auto}
+nav button{flex:1;padding:12px;border:0;border-radius:10px 10px 0 0;background:#e8e1d8;font:inherit;font-weight:700;cursor:pointer;color:var(--navy)}
+nav button.on{background:var(--card);box-shadow:0 -3px 0 var(--acc) inset}
+main{max-width:1000px;margin:0 auto;padding:0 12px 100px}
+.panel{background:var(--card);border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;padding:4px 16px 18px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+input[type=date]{min-width:0;padding-left:8px;padding-right:8px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:10px;padding:13px 18px;cursor:pointer;background:var(--acc);color:#fff}
+.btn.sec{background:#eee6dc;color:var(--navy)}.btn.ok{background:var(--verde)}.btn.no{background:var(--rojo)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;gap:8px}.row input{flex:1}
+.visit{margin-top:12px;padding:12px;border-radius:12px;background:#faf7f3;border:1px solid var(--line)}
+.visit b{font-size:1.05em}
+.req{margin-top:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.req h3{margin:0;padding:10px 14px;background:#f1ebe3;font-size:1em}
+.req ul{list-style:none;margin:0;padding:4px 14px}
+.req li{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #f0ebe4}
+.req li:last-child{border:0}
+.mk{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;flex:none;font-size:.85em;margin-top:1px}
+.mk.s{background:var(--verde)}.mk.n{background:var(--rojo)}.mk.i{background:#8a8f98}
+.req .d{color:var(--gris);font-size:.9em;display:block}
+.estado{padding:12px 14px;font-weight:800}
+.estado.ok{background:var(--verdebg);color:var(--verde)}.estado.no{background:var(--rojobg);color:var(--rojo)}
+.acciones{display:flex;gap:10px;margin-top:14px}
+.acciones .btn{flex:1}
+.msg{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--ambarbg);color:#5a3500;font-weight:600}
+.resumen{border:2px solid var(--verde);border-radius:14px;overflow:hidden;margin-top:14px}
+.resumen.rech{border-color:var(--rojo)}
+.resumen .cab{background:var(--verde);color:#fff;padding:12px 14px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.resumen.rech .cab{background:var(--rojo)}
+.resumen .cab strong{font-size:1.2em;letter-spacing:.04em}
+.resumen dl{margin:0;padding:10px 14px;display:grid;grid-template-columns:130px 1fr;gap:6px 10px}
+.resumen dt{color:var(--gris)}.resumen dd{margin:0;font-weight:600}
+.item{padding:12px;border:1px solid var(--line);border-radius:12px;margin-top:10px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.tag{padding:3px 10px;border-radius:99px;font-weight:800;font-size:.8em}
+.tag.ok{background:var(--verdebg);color:var(--verde)}.tag.no{background:var(--rojobg);color:var(--rojo)}
+footer{max-width:1000px;margin:0 auto;padding:0 16px 90px;color:var(--gris);font-size:.88em}
+footer a{color:var(--acc);text-decoration:underline;cursor:pointer}
+.modal{position:fixed;inset:0;background:rgba(20,12,4,.65);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal.on{display:flex}
+.modal .box{background:#fff;border-radius:16px;max-width:620px;max-height:92vh;overflow:auto;padding:22px}
+.modal h3{margin:0 0 8px}.modal li{margin:6px 0}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;display:none;z-index:30;max-width:90vw;text-align:center}
+body{font-size:17px}
+.btn{min-height:54px}
+input,select,textarea{min-height:50px}
+.barra{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 12px;display:flex;gap:10px;z-index:15;box-shadow:0 -4px 14px rgba(0,0,0,.08)}
+.barra .btn{flex:1}
+.acciones.inline{display:none}
+@media(min-width:900px){
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+  .barra{position:static;box-shadow:none;border:0;padding:0;margin-top:14px}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>App Accesos · Solicitud y autorización de visitas<small>Unidad Minera Chakiqocha · Qori Urqu S.A.A. · PROTOTIPO con datos de prueba</small></h1>
+  <div class="yo"><label for="host" style="margin:0;font-weight:600">Anfitrión:</label><select id="host"></select></div>
+</header>
+<nav><button id="tabNueva" class="on" type="button">Nueva solicitud</button><button id="tabMias" type="button">Mis solicitudes (<span id="nMias">0</span>)</button></nav>
+<main>
+ <section id="vNueva" class="panel">
+  <div class="cols"><div>
+  <label for="dni">DNI o CE del visitante</label>
+  <div class="row"><input id="dni" inputmode="numeric" autocomplete="off" placeholder="Ej.: 12034333"><button class="btn" id="btnBuscar" type="button">Buscar</button></div>
+  <div id="aviso"></div>
+  <div id="visit"></div>
+
+  <label for="area">Área a visitar</label>
+  <select id="area" style="width:100%"></select>
+  <div id="zr" class="msg" style="display:none">Zona restringida: se necesita una escolta asignada.</div>
+  <div id="boxEsc" style="display:none"><label for="esc">Escolta asignada</label><select id="esc" style="width:100%"></select></div>
+  <div class="grid2">
+    <div><label for="ini">Fecha de inicio</label><input type="date" id="ini"></div>
+    <div><label for="fin">Fecha de fin</label><input type="date" id="fin"></div>
+  </div>
+  <label for="motivo">Motivo de la visita</label>
+  <input id="motivo" placeholder="Ej.: mantenimiento de fajas">
+  </div><div>
+  <div id="req"></div>
+  <div id="rechBox" style="display:none"><label for="motRech">Motivo del rechazo</label><textarea id="motRech" rows="2" placeholder="Explique brevemente"></textarea><div class="acciones"><button class="btn no" id="btnConfRech" type="button">Confirmar rechazo</button><button class="btn sec" id="btnCancRech" type="button">Cancelar</button></div></div>
+  <div class="barra" id="acc"><button class="btn ok" id="btnAut" type="button" disabled>Autorizar</button><button class="btn no" id="btnRech" type="button">Rechazar</button></div>
+  <div id="resumen"></div>
+  </div></div>
+ </section>
+ <section id="vMias" class="panel" style="display:none"><div id="lista"></div></section>
+</main>
+<footer>Prototipo académico (Sesión 12) · Solo datos de prueba · <a id="lnkPriv">Aviso de privacidad (Ley 29733)</a></footer>
+
+<div class="modal on" id="modal">
+  <div class="box" role="dialog" aria-labelledby="mt">
+    <h3 id="mt">Aviso de privacidad</h3>
+    <p>De acuerdo con la <strong>Ley 29733</strong> y su reglamento (<strong>D.S. 016-2024-JUS</strong>), informamos:</p>
+    <ul>
+      <li><strong>Quién:</strong> Compañía Minera Qori Urqu S.A.A. (Unidad Minera Chakiqocha).</li>
+      <li><strong>Para qué:</strong> tramitar la autorización previa de ingreso de visitantes y comprobar sus requisitos de seguridad (seguro vigente, certificado médico, escolta en zonas restringidas).</li>
+      <li><strong>Qué datos:</strong> DNI o CE, nombres, empresa, vigencia del seguro y aptitud médica.</li>
+      <li><strong>Quién los ve:</strong> el anfitrión que solicita, los vigilantes de garita, SSO y la Gerencia de la Unidad.</li>
+      <li><strong>Derechos:</strong> acceso, rectificación, cancelación y oposición, escribiendo al área de SSO.</li>
+    </ul>
+    <p style="color:#5b6472"><em>Este prototipo solo contiene datos de prueba; ningún DNI es real. Al continuar, usted declara que informará al visitante la finalidad de este registro.</em></p>
+    <button class="btn" id="btnAcepto" type="button">Entendido</button>
+  </div>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const AREAS=['Mantenimiento','Planta de procesos','Tajo abierto','Almacén','Oficinas','Campamento','Polvorín','Relaciones Comunitarias'];
+const RESTRINGIDAS=['Tajo abierto','Planta de procesos','Polvorín'];
+const ANFITRIONES=['Ing. Hugo Valverde','Ing. Diana Rojas','Ing. Marco Tello','Ing. Raúl Ccori','Sr. Iván Pinedo','Lic. Rosa Cárdenas'];
+const ESCOLTAS=['Ing. Hugo Valverde','Ing. Diana Rojas','Ing. Marco Tello','Supervisor de turno'];
+// Datos de prueba (tomados del caso). Ningún DNI es real.
+const BASE=[
+ {dni:'12034333',nombre:'Castillo Pinedo, Katherine',empresa:'Servicios Generales Huaylas S.A.C.',tipo:'Contratista',seguro:'SCTR',vence:'2026-08-15',medico:true},
+ {dni:'25976519',nombre:'Flores Paredes, Víctor',empresa:'Explosivos del Pacífico S.A.',tipo:'Proveedor',seguro:'SCTR',vence:'2027-03-31',medico:true},
+ {dni:'51409143',nombre:'Mamani Tello, Lucía',empresa:'OSINERGMIN',tipo:'Inspector',seguro:'Seguro de accidentes',vence:'2027-06-30',medico:true},
+ {dni:'53446178',nombre:'Espinoza Lozano, Paola',empresa:'Ferreyros S.A.',tipo:'Proveedor',seguro:'SCTR',vence:'2027-02-28',medico:true},
+ {dni:'06859458',nombre:'Chávez Mendoza, Ricardo',empresa:'OSINERGMIN',tipo:'Inspector',seguro:'Seguro de accidentes',vence:'2027-06-30',medico:true},
+ {dni:'15254332',nombre:'Alvarado Torres, Víctor',empresa:'Transportes Cóndor del Norte E.I.R.L.',tipo:'Proveedor',seguro:'SCTR',vence:'2027-01-31',medico:true}
+];
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+const hoyISO=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+const dmy=s=>s?s.split('-').reverse().join('/'):'—';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2800)}
+
+let state={sol:[]};
+const KEY='qoriurqu_accesos_proto';
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+(function(){try{const s=localStorage.getItem(KEY);if(s)state=JSON.parse(s)}catch(e){}})();
+let vis=null;
+
+function evaluar(){
+  const hoy=hoyISO(),ini=$('#ini').value,fin=$('#fin').value,area=$('#area').value;
+  const r=[];
+  r.push({n:'Identidad (DNI / CE)',ok:!!vis,d:vis?'DNI '+vis.dni+' verificado en la base':'Busque al visitante por su DNI'});
+  if(vis){
+    const cubre=fin?vis.vence>=fin:vis.vence>=hoy;
+    r.push({n:vis.seguro+' cubre toda la visita',ok:cubre,d:vis.vence<hoy?'VENCIDO el '+dmy(vis.vence)+' (renovar antes de solicitar)':(cubre?'Vence '+dmy(vis.vence)+' · cubre hasta el '+dmy(fin):'Vence '+dmy(vis.vence)+', antes del fin de la visita ('+dmy(fin)+')')});
+    r.push({n:'Certificado médico de aptitud para altura',ok:vis.medico,d:vis.medico?'Vigente':'No registrado'});
+  }
+  if(RESTRINGIDAS.includes(area)){
+    const e=$('#esc').value;
+    r.push({n:'Escolta asignada (zona restringida)',ok:!!e,d:e?e:'Elija una escolta: '+area+' es zona restringida'});
+  }
+  const okF=!!ini&&!!fin&&fin>=ini&&ini>=hoy;
+  r.push({n:'Fechas de la visita',ok:okF,d:!ini||!fin?'Indique inicio y fin':ini<hoy?'El inicio no puede ser anterior a hoy':fin<ini?'La fecha de fin es anterior al inicio':dmy(ini)+' al '+dmy(fin)});
+  r.push({n:'Inducción de seguridad',ok:null,d:'Se realiza en garita al llegar; el vigilante registra la constancia.'});
+  return r;
+}
+function pintaReq(){
+  const r=evaluar();
+  $('#req').innerHTML='<div class="req"><h3>Requisitos antes de autorizar</h3><ul>'+r.map(x=>'<li><span class="mk '+(x.ok===null?'i':x.ok?'s':'n')+'">'+(x.ok===null?'i':x.ok?'✔':'✖')+'</span><span><strong>'+esc(x.n)+'</strong><span class="d">'+esc(x.d)+'</span></span></li>').join('')+'</ul>'+
+    '<div class="estado '+(todoOk(r)?'ok':'no')+'">'+(todoOk(r)?'Se puede autorizar':'Aún no se puede autorizar')+'</div></div>';
+  $('#btnAut').disabled=!todoOk(r);
+}
+function todoOk(r){return r.every(x=>x.ok!==false)&&!!vis}
+
+function buscar(){
+  const q=$('#dni').value.trim();$('#aviso').innerHTML='';$('#visit').innerHTML='';vis=null;
+  const bad=t=>{$('#aviso').innerHTML='<div class="msg">'+esc(t)+'</div>';pintaReq()};
+  if(!/^\d+$/.test(q))return bad('Escriba solo números.');
+  if(q.length===7&&BASE.some(x=>x.dni==='0'+q)){$('#dni').value='0'+q;return buscar()}
+  const v=BASE.find(x=>x.dni===q);
+  if(!v)return bad('No encontrado en la base de prueba. Revise el DNI (8 dígitos).');
+  vis=v;
+  $('#visit').innerHTML='<div class="visit"><b>'+esc(v.nombre)+'</b><br>'+esc(v.empresa)+' · '+esc(v.tipo)+'<br><span style="color:#5b6472">'+esc(v.seguro)+' hasta '+dmy(v.vence)+'</span></div>';
+  pintaReq();
+}
+function areaCambio(){
+  const rs=RESTRINGIDAS.includes($('#area').value);
+  $('#zr').style.display=rs?'block':'none';$('#boxEsc').style.display=rs?'block':'none';
+  if(!rs)$('#esc').value='';
+  pintaReq();
+}
+function codigo(){return 'VIS-2026-'+String(state.sol.length+1).padStart(4,'0')}
+function crear(estado,motivoRech){
+  const s={cod:codigo(),estado,motivoRech:motivoRech||'',dni:vis.dni,nombre:vis.nombre,empresa:vis.empresa,area:$('#area').value,ini:$('#ini').value,fin:$('#fin').value,escolta:$('#esc').value||'',motivo:$('#motivo').value,anfitrion:$('#host').value,fecha:new Date().toLocaleString('es-PE')};
+  state.sol.unshift(s);save();return s;
+}
+function tarjeta(s){
+  const ok=s.estado==='AUTORIZADA';
+  return '<div class="resumen '+(ok?'':'rech')+'"><div class="cab"><strong>'+esc(s.cod)+'</strong><span>'+esc(s.estado)+'</span></div><dl>'+
+   '<dt>Visitante</dt><dd>'+esc(s.nombre)+'</dd><dt>Empresa</dt><dd>'+esc(s.empresa)+'</dd><dt>Área</dt><dd>'+esc(s.area)+'</dd>'+
+   '<dt>Fechas</dt><dd>'+dmy(s.ini)+' al '+dmy(s.fin)+'</dd>'+(s.escolta?'<dt>Escolta</dt><dd>'+esc(s.escolta)+'</dd>':'')+
+   (s.motivo?'<dt>Motivo</dt><dd>'+esc(s.motivo)+'</dd>':'')+(ok?'':'<dt>Rechazo</dt><dd>'+esc(s.motivoRech||'(sin motivo)')+'</dd>')+
+   '<dt>Anfitrión</dt><dd>'+esc(s.anfitrion)+'</dd><dt>Registrado</dt><dd>'+esc(s.fecha)+'</dd></dl>'+
+   (ok?'<div style="padding:0 14px 14px"><button class="btn sec" id="btnCopiar" type="button" style="width:100%">Copiar resumen para el vigilante</button></div>':'')+
+   '</div>';
+}
+function mostrar(s){
+  $('#resumen').innerHTML=tarjeta(s);
+  const b=$('#btnCopiar');if(b)b.onclick=()=>{
+    const t='AUTORIZADO '+s.cod+'\n'+s.nombre+' ('+s.empresa+')\nÁrea: '+s.area+(s.escolta?' · Escolta: '+s.escolta:'')+'\nDel '+dmy(s.ini)+' al '+dmy(s.fin)+'\nAnfitrión: '+s.anfitrion;
+    try{navigator.clipboard.writeText(t).then(()=>toast('Resumen copiado'),()=>toast('No se pudo copiar'))}catch(e){toast('No se pudo copiar')}
+  };
+  $('#resumen').scrollIntoView({behavior:'smooth',block:'nearest'});
+  pintaLista();
+}
+function autorizar(){
+  const r=evaluar();if(!todoOk(r))return;
+  const s=crear('AUTORIZADA');mostrar(s);toast('Visita autorizada · '+s.cod);
+}
+function pedirRechazo(){
+  if(!vis){toast('Primero busque al visitante');return}
+  $('#rechBox').style.display='block';$('#motRech').focus();
+}
+function confirmarRechazo(){
+  const m=$('#motRech').value.trim();
+  if(m.length<5){toast('Escriba el motivo del rechazo');return}
+  const s=crear('RECHAZADA',m);$('#rechBox').style.display='none';$('#motRech').value='';mostrar(s);toast('Solicitud rechazada');
+}
+function pintaLista(){
+  $('#nMias').textContent=state.sol.length;
+  $('#lista').innerHTML=state.sol.length?state.sol.map(s=>'<div class="item"><div><b>'+esc(s.nombre)+'</b><br><span style="color:#5b6472">'+esc(s.cod)+' · '+esc(s.area)+' · '+dmy(s.ini)+' al '+dmy(s.fin)+'</span></div><span class="tag '+(s.estado==='AUTORIZADA'?'ok':'no')+'">'+esc(s.estado)+'</span></div>').join(''):'<p>Aún no hay solicitudes.</p>';
+}
+
+$('#host').innerHTML=ANFITRIONES.map(n=>'<option>'+n+'</option>').join('');
+$('#area').innerHTML=AREAS.map(n=>'<option>'+n+'</option>').join('');
+$('#esc').innerHTML='<option value="">— Sin escolta —</option>'+ESCOLTAS.map(n=>'<option>'+n+'</option>').join('');
+$('#ini').value=hoyISO();$('#fin').value=hoyISO();
+$('#btnBuscar').onclick=buscar;
+$('#dni').addEventListener('keydown',e=>{if(e.key==='Enter')buscar()});
+['ini','fin','esc'].forEach(i=>$('#'+i).addEventListener('change',pintaReq));
+$('#area').addEventListener('change',areaCambio);
+$('#btnAut').onclick=autorizar;$('#btnRech').onclick=pedirRechazo;
+$('#btnConfRech').onclick=confirmarRechazo;$('#btnCancRech').onclick=()=>{$('#rechBox').style.display='none'};
+function tab(n){$('#vNueva').style.display=n?'none':'block';$('#vMias').style.display=n?'block':'none';$('#tabNueva').className=n?'':'on';$('#tabMias').className=n?'on':'';
+  $('#acc').style.display=n?'none':'flex';
+  pintaLista()}
+$('#tabNueva').onclick=()=>tab(0);$('#tabMias').onclick=()=>tab(1);
+$('#btnAcepto').onclick=()=>$('#modal').classList.remove('on');
+$('#lnkPriv').onclick=()=>$('#modal').classList.add('on');
+areaCambio();pintaLista();
+</script>
+</body>
+</html>
